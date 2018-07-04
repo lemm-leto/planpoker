@@ -1,0 +1,388 @@
+<html>
+    <head>
+        <style>
+            * {
+                font-size: 24px;
+            }
+            html, body {
+                height: 100%;
+            }
+            body {
+                margin: 0;
+                background: #e8e8e8;
+                padding: 0.5rem 0;
+            }
+            .container {
+                max-width: 1200px;
+                background: white;
+                height: 100%;
+                margin: 0 auto;
+                padding: 1rem 0;
+                border: 1px solid #d0d0d0;
+            }
+            .row {
+                padding: 0 1rem;
+                display: flex;
+                margin-bottom: 0.5rem;
+            }
+            .col {
+                align-items: stretch;
+                justify-content: center;
+                align-content: center;
+                flex-direction: column;
+                display: flex;
+                float: left;
+            }
+            .w-100 {
+                width: 100%;
+            }
+            @media (min-width: 1200px) {
+                .w-25-l {
+                    width: 25%;
+                }
+                .w-50-l {
+                    width: 50%;
+                }
+                .w-75-l {
+                    width: 75%;
+                }
+            }
+
+            label, .input {
+                line-height: 1rem;
+            }
+        </style>
+        <script type="text/javascript" src='http://code.jquery.com/jquery-1.11.0.min.js'></script>
+        <script>
+            var config = {
+                "risks": [
+                    {
+                        "label": "Impossible (0%)",
+                        "SP": 1
+                    },
+                    {
+                        "label": "Highly unlikely (10%)",
+                        "SP": 2
+                    },
+                    {
+                        "label": "Very unlikely (20%)",
+                        "SP": 3
+                    },
+                    {
+                        "label": "Less than even chance (40%)",
+                        "SP": 5
+                    },
+                    {
+                        "label": "Likely (70%)",
+                        "SP": 8
+                    },
+                    {
+                        "label": "Highly likely (90%)",
+                        "SP": 13
+                    }
+                ],
+                "tech": [
+                    {
+                        "label": "No",
+                        "SP": 1
+                    },
+                    {
+                        "label": "Not a label",
+                        "SP": 2
+                    },
+                    {
+                        "label": "Some typical work",
+                        "SP": 3
+                    },
+                    {
+                        "label": "Dev/QA work is complicated due to business",
+                        "SP": 5
+                    },
+                    {
+                        "label": "DEV/QA work is complicated due to tech stack or similar",
+                        "SP": 8
+                    },
+                    {
+                        "label": "A lot of preparation work",
+                        "SP": 13
+                    }
+                ],
+                "confidence": [
+                    {
+                        "label": "100%",
+                        "SP": 1
+                    },
+                    {
+                        "label": "99.99%",
+                        "SP": 2
+                    },
+                    {
+                        "label": "90%",
+                        "SP": 3
+                    },
+                    {
+                        "label": "70-80%",
+                        "SP": 5
+                    },
+                    {
+                        "label": "40-70%",
+                        "SP": 8
+                    },
+                    {
+                        "label": "5-40%",
+                        "SP": 13
+                    }
+                ],
+                "analysis": [
+                    {
+                        "label": "No",
+                        "SP": 1
+                    },
+                    {
+                        "label": "No (99%)",
+                        "SP": 2
+                    },
+                    {
+                        "label": "No in most cases",
+                        "SP": 3
+                    },
+                    {
+                        "label": "Yes in most cases",
+                        "SP": 5
+                    },
+                    {
+                        "label": "Yes",
+                        "SP": 8
+                    },
+                    {
+                        "label": "Specific area knowledge is required",
+                        "SP": 13
+                    }
+                ],
+                "sprint": [
+                    {
+                        "label": "Certain",
+                        "SP": 1
+                    },
+                    {
+                        "label": "Certain (No problems expected)",
+                        "SP": 2
+                    },
+                    {
+                        "label": "Highly likely",
+                        "SP": 3
+                    },
+                    {
+                        "label": "Very likely",
+                        "SP": 5
+                    },
+                    {
+                        "label": "Less that even chance",
+                        "SP": 8
+                    },
+                    {
+                        "label": "Highly unlikely",
+                        "SP": 13
+                    }
+                ],
+                "split": [
+                    {
+                        "label": "No (1SP)",
+                        "SP": 1
+                    },
+                    {
+                        "label": "No (2SP)",
+                        "SP": 2
+                    },
+                    {
+                        "label": "No (3SP)",
+                        "SP": 3
+                    },
+                    {
+                        "label": "Very unlikely",
+                        "SP": 5
+                    },
+                    {
+                        "label": "Likely (can be splitted)",
+                        "SP": 8
+                    },
+                    {
+                        "label": "Epic candidate",
+                        "SP": 13
+                    }
+                ]
+            }
+
+            $(document).ready(function() {
+                $.each(config.risks, function(key, value) {
+                    $('#risks').append(
+                        $("<option></option>")
+                            .attr("value", value.SP)
+                            .attr("selected", key === 0)
+                            .text(value.label)
+                    ); 
+                });
+
+                $.each(config.tech, function(key, value) {
+                    $('#tech').append(
+                        $("<option></option>")
+                            .attr("value", value.SP)
+                            .text(value.label)
+                    ); 
+                });
+
+                $.each(config.confidence, function(key, value) {
+                    $('#confidence').append(
+                        $("<option></option>")
+                            .attr("value", value.SP)
+                            .text(value.label)
+                    ); 
+                });
+
+                $.each(config.sprint, function(key, value) {
+                    $('#sprint').append(
+                        $("<option></option>")
+                            .attr("value", value.SP)
+                            .text(value.label)
+                    ); 
+                });
+
+                $.each(config.analysis, function(key, value) {
+                    $('#analysis').append(
+                        $("<option></option>")
+                            .attr("value", value.SP)
+                            .text(value.label)
+                    ); 
+                });
+
+                $.each(config.split, function(key, value) {
+                    $('#split').append(
+                        $("<option></option>")
+                            .attr("value", value.SP)
+                            .text(value.label)
+                    ); 
+                });
+                
+
+                calc();
+            })
+
+            var getProb = function(input) {
+                if (!(input instanceof Array) || input.length !== 6) {
+                    return 0.00;
+                }
+
+                return 0.19047619 * input[0] + 
+                    0.218253968 * input[1] +
+                    0.226190476 * input[2] +
+                    0.119047619 * input[3] +
+                    0.119047619 * input[4] +
+                    0.126984127 * input[5];
+            }
+
+            var calc = function() {
+                var risk = $('#risks :selected').val();
+                var confidence = $('#confidence :selected').val();
+                var sprint = $('#sprint :selected').val();
+                var tech = $('#tech :selected').val();
+                var analysis = $('#analysis :selected').val();
+                var split = $('#split :selected').val();
+
+                var input = [risk, tech, confidence, analysis, sprint, split];
+
+                var result = [
+                    {
+                        "sp": 1,
+                        "prob": getProb(input.map(i => parseInt(i, 10)).map(i => i === 1 ? 1 : 0)),
+                    },
+                    {
+                        "sp": 2,
+                        "prob": getProb(input.map(i => parseInt(i, 10)).map(i => i === 2 ? 1 : 0)),
+                    },
+                    {
+                        "sp": 3,
+                        "prob": getProb(input.map(i => parseInt(i, 10)).map(i => i === 3 ? 1 : 0)),
+                    },
+                    {
+                        "sp": 5,
+                        "prob": getProb(input.map(i => parseInt(i, 10)).map(i => i === 5 ? 1 : 0)),
+                    },
+                    {
+                        "sp": 8,
+                        "prob": getProb(input.map(i => parseInt(i, 10)).map(i => i === 8 ? 1 : 0)),
+                    },
+                    {
+                        "sp": 13,
+                        "prob": getProb(input.map(i => parseInt(i, 10)).map(i => i === 13 ? 1 : 0)),
+                    }
+                ]
+
+                result = result.sort((a, b) => a.prob > b.prob ? -1 : a.prob < b.prob ? 1 : 0);
+
+                $('#result').text(result[0].sp + ' SP. Probability is ' + (result[0].prob * 100).toFixed(2) + '%');
+
+                $('#details').html('');
+                result.forEach(res => $('#details').append($('<li></li>').text(res.sp + 'SP = ' + (res.prob * 100).toFixed(2) + '%')));
+            }
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col w-25-l">
+                    Risks
+                </div>
+                <div class="col w-25-l">
+                    <select class="input" id="risks" onchange="calc()"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col w-25-l">
+                    Confidence
+                </div>
+                <div class="col w-25-l">
+                    <select class="input" id="confidence" onchange="calc()"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col w-25-l">
+                    One Sprint
+                </div>
+                <div class="col w-25-l">
+                    <select class="input" id="sprint" onchange="calc()"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col w-25-l">
+                    Technical complexity
+                </div>
+                <div class="col w-25-l">
+                    <select class="input" id="tech" onchange="calc()"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col w-25-l">
+                    Analysis required
+                </div>
+                <div class="col w-25-l">
+                    <select class="input" id="analysis" onchange="calc()"></select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col w-25-l">
+                    Split
+                </div>
+                <div class="col w-25-l">
+                    <select class="input" id="split" onchange="calc()"></select>
+                </div>
+            </div>
+            <div class="row" style="font-weight: bold;">
+                Your result is <span id="result" style="margin-left: 5px;"></span>
+            </div>
+            <div class="row">
+                Details:
+                <ul id="details"></ul>
+            </div>
+        </div>
+    </body>
+</html>
